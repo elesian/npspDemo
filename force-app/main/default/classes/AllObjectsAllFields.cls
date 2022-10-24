@@ -1,7 +1,7 @@
 public with sharing class AllObjectsAllFields {
 
     //Retrieve all fields for all objects
-    public static void dataDictionary(List<String> objs) {
+    public static void dataDictionary(List<String> objs, String fileName) {
 
     //GLOBAL - get a list of all objects
     Map<String, Schema.SObjectType> gd = 
@@ -25,7 +25,7 @@ public with sharing class AllObjectsAllFields {
     Map<String, List<String>> dictionary = new Map<String, List<String>>();
 
     //Hold String Header
-    String csvColumnHeader = 'Object, API Field Name, Data Type\n';
+    String csvColumnHeader = 'Object, FieldLabel, API Field Name, Data Type\n';
     List<String> csvRowValues = new List<String>();
     
 
@@ -37,8 +37,9 @@ public with sharing class AllObjectsAllFields {
         for(Schema.SObjectField field :gd.get(currentObject).getDescribe().fields.getMap().Values()) {
 
             String currentField = field.getDescribe().getName();
+            String fieldLabel = field.getDescribe().getLabel();
             String dataType = field.getDescribe().getRelationshipName();
-            String csvRowVal = currentObject + ',' + currentField + ',' + dataType;
+            String csvRowVal = currentObject + ',' + fieldLabel + ',' + currentField + ',' + dataType;
             csvRowValues.add(csvRowVal);
             
         }
@@ -48,9 +49,9 @@ public with sharing class AllObjectsAllFields {
     String csvFile = csvColumnHeader + String.join(csvRowValues, '\n');
 
     ContentVersion file = new ContentVersion(
-        title = 'objectAndFields.csv',
+        title = fileName,
         versionData = Blob.valueOf(csvFile),
-        pathOnClient = '/objectAndFields.csv');
+        pathOnClient = '/' + fileName + '.csv');
 
         insert file;
 
