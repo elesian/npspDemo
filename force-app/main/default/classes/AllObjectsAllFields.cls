@@ -25,17 +25,20 @@ public with sharing class AllObjectsAllFields {
     Map<String, List<String>> dictionary = new Map<String, List<String>>();
 
     //Hold String Header
-    String csvColumnHeader = 'Object, API Field Name\n';
+    String csvColumnHeader = 'Object, API Field Name, Data Type\n';
     List<String> csvRowValues = new List<String>();
     
 
     //loop through each object - global
     For(String currentObject : objectList){
 
+
         //add API values to objectFields
-        for(Schema.SObjectField fields :gd.get(currentObject).getDescribe().fields.getMap().Values()) {
-            
-            String csvRowVal = currentObject + ',' + fields.getDescribe().getName();
+        for(Schema.SObjectField field :gd.get(currentObject).getDescribe().fields.getMap().Values()) {
+
+            String currentField = field.getDescribe().getName();
+            String dataType = field.getDescribe().getRelationshipName();
+            String csvRowVal = currentObject + ',' + currentField + ',' + dataType;
             csvRowValues.add(csvRowVal);
             
         }
