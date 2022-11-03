@@ -1,5 +1,6 @@
 public with sharing class AllObjectsAllFields {
 
+
     //Retrieve all fields for all objects
     public static void dataDictionary(List<String> objs, String fileName) {
 
@@ -25,7 +26,7 @@ public with sharing class AllObjectsAllFields {
     Map<String, List<String>> dictionary = new Map<String, List<String>>();
 
     //Hold String Header
-    String csvColumnHeader = 'Object, FieldLabel, API Field Name, Data Type\n';
+    String csvColumnHeader = 'Object, FieldLabel, API Field Name, Relationship Name, Data Type\n';
     List<String> csvRowValues = new List<String>();
     
 
@@ -38,13 +39,15 @@ public with sharing class AllObjectsAllFields {
 
             String currentField = field.getDescribe().getName();
             String fieldLabel = field.getDescribe().getLabel();
-            String dataType = field.getDescribe().getRelationshipName();
-            String csvRowVal = currentObject + ',' + fieldLabel + ',' + currentField + ',' + dataType;
+            String relationshipName = field.getDescribe().getRelationshipName();
+            String dataType = field.getDescribe().getType().name();
+            
+            String csvRowVal = currentObject + ',' + fieldLabel + ',' + currentField + ',' + RelationshipName + ',' + dataType;
             csvRowValues.add(csvRowVal);
             
         }
         
-    }
+    } 
 
     String csvFile = csvColumnHeader + String.join(csvRowValues, '\n');
 
